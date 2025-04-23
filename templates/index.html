@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Flask</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+<body>
+
+
+    <nav class="navbar">
+        <a href="#" class="logo-link">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo do Site" class="navbar-logo">
+        </a>
+        <!-- Botão do menu hambúrguer -->
+        <button class="hamburger-btn" aria-label="Menu">
+            <i class="fas fa-bars"></i>
+        </button>
+        <ul class="nav-menu">
+            <li><a href="#empresas">Benefícios</a></li>
+            <li><a href="#beneficios">Palestras</a></li>
+            <li><a href="#palestrantes">Patrocinadores</a></li>
+            <li><a href="#calendário">Calendário</a></li>
+            <li><a href="#depoimentos">Depoimentos</a></li>
+            <li><a href="#local">Local</a></li>
+            <li><a href="#faq">FAQ</a></li>
+        </ul>
+    </nav>  
+
+    <section id="inicio" class="intro" style="background-image: url('{{ background_url }}');">
+        <div class="intro-content">
+            <div class="intro-text">
+                {% if background_image.titulo %}
+                <h1>{{ background_image.titulo }}</h1>
+                {% endif %}
+                {% if background_image.subtitulo %}
+                <p>{{ background_image.subtitulo }}</p>
+                {% endif %}
+                <a href="#inscricao" class="participacao-btn">Confirme sua participação</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="sobre" class="section">
+        <div id="sobre-swiper" class="swiper-container">
+            <div class="swiper-wrapper">
+                {% for item in carousel_items %}
+                <div class="swiper-slide">
+                    <div class="slide-content">
+                        <div class="text-content">
+                            <h3>{{ item.title }}</h3>
+                            <p>{{ item.description | replace('\n', '<br>') | safe }}</p>
+                        </div>
+                        <div class="image-content">
+                            <img src="{{ url_for('static', filename='uploads/' + item.image) }}" alt="{{ item.title }}">
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+        </div>
+        <div class="swiper-button-next sobre-next"></div>
+        <div class="swiper-button-prev sobre-prev"></div>
+        <div class="button-container">
+            <a href="#inscricao" class="inscreva-se-btn">Inscreva-se</a>
+        </div>
+    </section>
+
+    <section id="patrocinadores" class="section patrocinadores-section">
+        <h2>Patrocinadores</h2>
+        <div class="patrocinadores-container">
+            {% for patrocinador in patrocinadores %}
+            <div class="patrocinador-item">
+                {% if patrocinador.url %}
+                <a href="{{ patrocinador.url }}" target="_blank">
+                    <img src="{{ url_for('static', filename='uploads/' + patrocinador.imagem) }}" alt="{{ patrocinador.nome }}">
+                </a>
+                {% else %}
+                <img src="{{ url_for('static', filename='uploads/' + patrocinador.imagem) }}" alt="{{ patrocinador.nome }}">
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section id="palestrantes" class="section">
+        <h2>Palestras Confirmadas</h2>
+        <div class="palestrantes-carrossel-container">
+            <div class="carrossel-button carrossel-prev">&#10094;</div>
+            <div class="palestrantes-carrossel">
+                <div class="palestrantes-track">
+                    {% for palestrante in palestrantes %}
+                    <div class="palestrante-card">
+                        <div class="palestrante-imagem">
+                            <img src="{{ url_for('static', filename='uploads/' + palestrante.imagem) }}" alt="{{ palestrante.nome }}">
+                        </div>
+                        <div class="palestrante-info">
+                            <h3>{{ palestrante.nome }}</h3>
+                            <p>{{ palestrante.descricao }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="carrossel-button carrossel-next">&#10095;</div>
+        </div>
+    </section>
+
+    <section id="calendario" class="section">
+        <h2>Calendário de Eventos</h2>
+        <div class="calendar-container">
+            <iframe src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=America%2FRecife&showPrint=0&src=eXVyaWNhbXBvc3Zhc2NvbmNlbG9zQGdtYWlsLmNvbQ&src=Y2xhc3Nyb29tMTExMjE4NjYwMDExNTg3NjAwNDA3QGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20&src=cHQuYnJhemlsaWFuI2hvbGlkYXlAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&src=cHQtYnIuYnJhemlsaWFuI2hvbGlkYXlAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&color=%23039BE5&color=%23202124&color=%237986CB&color=%230B8043" style="border:solid 1px #777" width="100%" height="600" frameborder="0" scrolling="no"></iframe>
+        </div>
+        <div class="calendar-button-container">
+            <button class="cta-calendario-button">Garantir minha vaga</button>
+        </div>
+    </section>
+
+    
+    <section id="depoimentos" class="section">
+        <h2>Depoimentos</h2>
+        
+        <!-- Carrossel de Depoimentos -->
+        <div class="depoimentos-carrossel-container">
+            <div id="depoimentos-swiper" class="swiper-container depoimentos-swiper">
+                <div class="swiper-wrapper">
+                    {% for depoimento in depoimentos %}
+                    <div class="swiper-slide">
+                        <div class="depoimento-card">
+                            <div class="depoimento-foto">
+                                        <img src="{{ url_for('static', filename='uploads/' + depoimento.foto) }}" alt="{{ depoimento.nome }}">
+                                    </div>
+                                    <div class="depoimento-conteudo">
+                                        <div class="depoimento-autor">
+                                            <h4>{{ depoimento.nome }}</h4>
+                                            {% if depoimento.curso %}
+                                            <p>{{ depoimento.curso }}</p>
+                                            {% endif %}
+                                        </div>
+                                        <p class="depoimento-texto">"{{ depoimento.comentario[:150] }}{% if depoimento.comentario|length > 150 %}...{% endif %}"</p>
+                                    </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="swiper-pagination depoimentos-pagination"></div>
+            </div>
+        </div>
+        
+        <!-- Formulário de Depoimento -->
+        <div class="depoimento-form-container">
+            <h3>Deixe seu depoimento</h3>
+            <form id="depoimentoForm" class="depoimento-form">
+                <div class="form-group">
+                    <textarea id="comentario" name="comentario" placeholder="Seu comentário..." required></textarea>
+                </div>
+                <button type="button" id="enviarDepoimentoBtn" class="enviar-depoimento-btn">
+                    Enviar Depoimento
+                </button>
+            </form>
+        </div>
+        
+        <!-- Modal de Autenticação -->
+        <div id="authModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h3>Autentique-se para enviar seu depoimento</h3>
+                <div class="auth-buttons">
+                    <button class="auth-btn google-auth">
+                        <img src="{{ url_for('static', filename='images/google-icon.png') }}" alt="Google">
+                        Continuar com Google
+                    </button>
+                    <button class="auth-btn instagram-auth">
+                        <img src="{{ url_for('static', filename='images/instagram-icon.png') }}" alt="Instagram">
+                        Continuar com Instagram
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="localizacao" class="section">
+        <h2>LOCAL DO EVENTO</h2>
+        
+        <div class="local-container">
+            <div class="local-info">
+                <div class="local-detalhes">
+                    <h3>Centro de Tecnologia e Geociências</h3>
+                    <p>Av. da Arquitetura, s/n - Cidade Universitária, Recife - PE, 50740-850</p>
+                    
+                    <h4>Auditórios:</h4>
+                    <ul>
+                        <li>Auditório Centro de Tecnologia e Geociências, 1º Andar CTG</li>
+                        <li>Auditório Departamento de Eletrônica e Sistemas, 4º Andar CTG</li>
+                    </ul>
+                </div>
+                
+            </div>
+            
+            <div class="local-mapa">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3950.375389036183!2d-34.95154392403999!3d-8.05286678053224!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7ab1995a1c2664d%3A0x5e2e3e7b1a3b3b1b!2sCentro%20de%20Tecnologia%20e%20Geoci%C3%AAncias%20-%20CTG%20-%20UFPE!5e0!3m2!1spt-BR!2sbr!4v1620000000000!5m2!1spt-BR!2sbr" 
+                    width="100%" 
+                    height="100%" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="section">
+        <h2>FAQ</h2>
+        
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>O evento é gratuito?</h3>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Para assistir qualquer uma das palestras com as maiores empresas do mercado, sim! Você só precisa se inscrever previamente de forma gratuita para participar do evento. Para os minicursos, que são conteúdos mais aprofundados, é necessário pagar apenas valores simbólicos para custear a organização.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>Quem pode assistir as palestras e minicursos da FASE?</h3>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Qualquer pessoa da UFPE! Entretanto, todo o conteúdo do evento foi organizado para atender especialmente estudantes do DEE e do DES, ou seja, foi feito para ter foco nos cursos de Engenharia de Controle e Automação, Elétrica, Eletrônica e Telecomunicações.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>Sou estudante. Posso prestar minicursos na FASE?</h3>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Sim! Além de professores e profissionais do mercado de engenharia, estudantes de graduação também podem ministrar cursos na FASE. Então se você é estudante e possui algum conhecimento em engenharia que acredita ser útil, entre em contato com a organização da FASE que vamos organizar o necessário para ministrar seu minicurso.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>Como obter certificados participando do evento?</h3>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Sim! A participação em palestras e minicursos da FASE gera certificados. Eles estarão disponíveis através do Sympla em até 3 dias úteis após o término do evento. Basta acessar o seu perfil e procurar pela opção "certificados".</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="cta-container">
+            <h2>VAI FICAR DE FORA?</h2>
+            <p class="cta-text">Garanta agora sua participação na FASE² 4.0!</p>
+            <button class="cta-button">Não vou perder</button>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-left">
+                <div class="logo">
+                    <a href="#" class="logo-link">
+                        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo do Site" class="navbar-logo">
+                    </a>
+                </div>
+                <div class="social-icons">
+                    <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://youtube.com" target="_blank"><i class="fab fa-youtube"></i></a>
+                    <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-right">
+                <div class="support-text">Apoio:</div>
+                <div class="support-logos">
+                    <!-- Adicione quantas logos de apoiadores você precisar -->
+                    <img src="caminho/para/apoiador1.png" alt="Apoiador 1">
+                    <img src="caminho/para/apoiador2.png" alt="Apoiador 2">
+                    <img src="caminho/para/apoiador3.png" alt="Apoiador 3">
+                    <!-- Adicione mais conforme necessário -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2025 Site Flask. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        // Swiper para "Sobre"
+        var sobreSwiper = new Swiper("#sobre-swiper", {
+            loop: true,
+            navigation: {
+                nextEl: ".sobre-next",
+                prevEl: ".sobre-prev",
+            },
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const track = document.querySelector('.palestrantes-track');
+            const cards = document.querySelectorAll('.palestrante-card');
+            const nextBtn = document.querySelector('.carrossel-next');
+            const prevBtn = document.querySelector('.carrossel-prev');
+            const carrossel = document.querySelector('.palestrantes-carrossel');
+            
+            let currentPosition = 0;
+            const cardCount = cards.length;
+            let cardWidth = cards[0].offsetWidth + 20; // Largura do card + gap
+            
+            // Calcula quantos cards cabem no visível
+            const visibleCards = () => {
+                const carrosselWidth = carrossel.offsetWidth;
+                return Math.floor(carrosselWidth / cardWidth);
+            };
+            
+            function updateCarousel() {
+                const maxPosition = Math.max(cardCount - visibleCards(), 0);
+                currentPosition = Math.min(currentPosition, maxPosition);
+                
+                track.style.transform = `translateX(-${currentPosition * cardWidth}px)`;
+                
+                // Atualiza estado dos botões
+                prevBtn.style.opacity = currentPosition === 0 ? '0.5' : '1';
+                prevBtn.style.pointerEvents = currentPosition === 0 ? 'none' : 'all';
+                
+                nextBtn.style.opacity = currentPosition >= maxPosition ? '0.5' : '1';
+                nextBtn.style.pointerEvents = currentPosition >= maxPosition ? 'none' : 'all';
+            }
+            
+            nextBtn.addEventListener('click', function() {
+                const maxPosition = Math.max(cardCount - visibleCards(), 0);
+                if (currentPosition < maxPosition) {
+                    currentPosition++;
+                    updateCarousel();
+                }
+            });
+            
+            prevBtn.addEventListener('click', function() {
+                if (currentPosition > 0) {
+                    currentPosition--;
+                    updateCarousel();
+                }
+            });
+            
+            // Recalcula ao redimensionar
+            const resizeObserver = new ResizeObserver(() => {
+                cardWidth = cards[0].offsetWidth + 20;
+                updateCarousel();
+            });
+            
+            resizeObserver.observe(carrossel);
+            
+            // Inicializa
+            updateCarousel();
+        });
+        
+        // Inicializa o Swiper para depoimentos
+        var depoimentosSwiper = new Swiper("#depoimentos-swiper", {
+            loop: true,
+            slidesPerView: 1, // Mostra 1 slide por padrão (para mobile)
+            spaceBetween: 20,
+            pagination: {
+                el: ".depoimentos-pagination",
+                clickable: true,
+            },
+            breakpoints: {
+                // Quando a largura da tela for >= 768px
+                768: {
+                    slidesPerView: 2, // Mostra 2 slides
+                    spaceBetween: 20
+                },
+                // Quando a largura da tela for >= 1024px
+                1024: {
+                    slidesPerView: 3, // Mostra 3 slides
+                    spaceBetween: 30
+                }
+            }
+        });
+
+        // Lógica do formulário de depoimento
+        document.addEventListener('DOMContentLoaded', function() {
+            const enviarBtn = document.getElementById('enviarDepoimentoBtn');
+            const authModal = document.getElementById('authModal');
+            const closeModal = document.querySelector('.close-modal');
+            const googleAuthBtn = document.querySelector('.google-auth');
+            const instagramAuthBtn = document.querySelector('.instagram-auth');
+            
+            enviarBtn.addEventListener('click', function() {
+                const comentario = document.getElementById('comentario').value.trim();
+                
+                if (comentario === '') {
+                    alert('Por favor, escreva seu depoimento antes de enviar.');
+                    return;
+                }
+                
+                // Mostra o modal de autenticação
+                authModal.style.display = 'block';
+            });
+            
+            closeModal.addEventListener('click', function() {
+                authModal.style.display = 'none';
+            });
+            
+            window.addEventListener('click', function(event) {
+                if (event.target === authModal) {
+                    authModal.style.display = 'none';
+                }
+            });
+            
+            document.querySelector('.google-auth').addEventListener('click', function() {
+                const comentario = document.getElementById('comentario').value;
+                if (!comentario.trim()) {
+                    alert('Por favor, escreva seu depoimento antes de enviar.');
+                    return;
+                }
+                window.location.href = `/auth/google?comentario=${encodeURIComponent(comentario)}`;
+            });
+
+            document.querySelector('.instagram-auth').addEventListener('click', function() {
+                const comentario = document.getElementById('comentario').value;
+                if (!comentario.trim()) {
+                    alert('Por favor, escreva seu depoimento antes de enviar.');
+                    return;
+                }
+                window.location.href = `/auth/instagram?comentario=${encodeURIComponent(comentario)}`;
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+        const faqItems = document.querySelectorAll('.faq-item');
+        
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            
+            question.addEventListener('click', () => {
+                // Fecha todos os outros itens
+                faqItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+                
+                // Abre/fecha o item clicado
+                item.classList.toggle('active');
+            });
+        });
+    });
+    // Adicione este script para controlar o menu hambúrguer
+    document.addEventListener('DOMContentLoaded', function() {
+            const hamburgerBtn = document.querySelector('.hamburger-btn');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            hamburgerBtn.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+                // Altera o ícone entre hambúrguer e X
+                const icon = this.querySelector('i');
+                if (navMenu.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+            
+            // Fecha o menu quando um item é clicado (para mobile)
+            const navItems = document.querySelectorAll('.nav-menu li a');
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        navMenu.classList.remove('active');
+                        const icon = hamburgerBtn.querySelector('i');
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
