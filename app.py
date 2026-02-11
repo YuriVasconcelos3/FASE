@@ -8,7 +8,7 @@ import os
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-app.config['SECRET_KEY'] = 'supersecretkey'
+app.config['SECRET_KEY'] = 'COLOQUE_SUA_CHAVE_AQUI'
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 
 db = SQLAlchemy(app)
@@ -17,8 +17,8 @@ oauth = OAuth(app)
 
 google = oauth.register(
     name='google',
-    client_id='363377690507-22qg5phfvj40rbjflefqfpuapa1pput7.apps.googleusercontent.com',
-    client_secret='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',
+    client_id = 'SEU_CLIENT_ID_DO_GOOGLE',
+    client_secret = 'SEU_CLIENT_SECRET_DO_GOOGLE',
     access_token_url='https://oauth2.googleapis.com/token',
     authorize_url='https://accounts.google.com/o/oauth2/auth',
     api_base_url='https://www.googleapis.com/oauth2/v3/',
